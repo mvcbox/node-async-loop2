@@ -19,5 +19,9 @@ function callIterator(iterable, iterator, index, keys, callback) {
  * @param {Function} callback
  */
 module.exports = function (iterable, iterator, callback) {
-    callIterator(iterable, iterator, 0, Object.keys(iterable), callback);
+    var keys = Object.keys(iterable);
+    if (!keys.length) {
+        return callback();
+    }
+    callIterator(iterable, iterator, 0, keys, callback);
 };
