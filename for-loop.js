@@ -2,13 +2,12 @@
 
 function callIterator(from, to, iterator, callback) {
     iterator(from, function (breakFlag) {
-        if (breakFlag || ++from > to) {
-            callback();
-        } else {
-            process.nextTick(function () {
-                callIterator(from, to, iterator, callback);
-            });
+        if (breakFlag || ++from >= to) {
+            return callback();
         }
+        process.nextTick(function () {
+            callIterator(from, to, iterator, callback);
+        });
     });
 }
 
@@ -19,7 +18,7 @@ function callIterator(from, to, iterator, callback) {
  * @param {Function} callback
  */
 module.exports = function (from, to, iterator, callback) {
-    if (from > to) {
+    if (from >= to) {
         return callback();
     }
     callIterator(from, to, iterator, callback);
