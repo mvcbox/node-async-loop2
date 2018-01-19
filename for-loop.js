@@ -1,25 +1,31 @@
 'use strict';
 
-function callIterator(from, to, iterator, callback) {
-    iterator(from, function (breakFlag) {
-        if (breakFlag || ++from >= to) {
+/**
+ * @param {Number} index
+ * @param {Number} to
+ * @param {Function} iterator
+ * @param {Function} callback
+ */
+function callIterator(index, to, iterator, callback) {
+    iterator(index, function (breakFlag) {
+        if (breakFlag || ++index >= to) {
             return callback();
         }
         process.nextTick(function () {
-            callIterator(from, to, iterator, callback);
+            callIterator(index, to, iterator, callback);
         });
     });
 }
 
 /**
- * @param {Number} from
+ * @param {Number} index
  * @param {Number} to
  * @param {Function} iterator
  * @param {Function} callback
  */
-module.exports = function (from, to, iterator, callback) {
-    if (from >= to) {
+module.exports = function (index, to, iterator, callback) {
+    if (index >= to) {
         return callback();
     }
-    callIterator(from, to, iterator, callback);
+    callIterator(index, to, iterator, callback);
 };

@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @param {Function} condition
+ * @param {Function} iterator
+ * @param {Function} callback
+ */
 function callIterator(condition, iterator, callback) {
     iterator(function (breakFlag) {
         if (breakFlag || !condition()) {
