@@ -11,6 +11,7 @@ function callIterator(index, to, iterator, callback) {
         if (breakFlag || ++index >= to) {
             return callback();
         }
+
         process.nextTick(function () {
             callIterator(index, to, iterator, callback);
         });
@@ -27,5 +28,6 @@ module.exports = function (index, to, iterator, callback) {
     if (index >= to) {
         return callback();
     }
+
     callIterator(index, to, iterator, callback);
 };

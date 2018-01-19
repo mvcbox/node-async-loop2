@@ -10,6 +10,7 @@ function callIterator(condition, iterator, callback) {
         if (breakFlag || !condition()) {
             return callback();
         }
+
         process.nextTick(function () {
             callIterator(condition, iterator, callback);
         });
@@ -25,5 +26,6 @@ module.exports = function (condition, iterator, callback) {
     if (!condition()) {
         return callback();
     }
+
     callIterator(condition, iterator, callback);
 };
