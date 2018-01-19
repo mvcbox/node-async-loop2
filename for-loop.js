@@ -1,5 +1,7 @@
 'use strict';
 
+var returnValue = require('./return-value');
+
 /**
  * @param {Number} index
  * @param {Number} to
@@ -25,9 +27,7 @@ function callIterator(index, to, iterator, callback) {
  * @param {Function} callback
  */
 module.exports = function (index, to, iterator, callback) {
-    if (index >= to) {
-        return callback();
-    }
-
-    callIterator(index, to, iterator, callback);
+    return returnValue(callback, function (callback) {
+        index < to ? callIterator(index, to, iterator, callback) : callback();
+    });
 };

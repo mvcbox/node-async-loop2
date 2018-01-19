@@ -1,5 +1,7 @@
 'use strict';
 
+var returnValue = require('./return-value');
+
 /**
  * @param {Object} iterable
  * @param {Function} iterator
@@ -47,10 +49,12 @@ function callArrayIterator(iterable, iterator, index, to, callback) {
  * @param {Function} callback
  */
 module.exports = function (iterable, iterator, callback) {
-    if (Array.isArray(iterable)) {
-        return iterable.length ? callArrayIterator(iterable, iterator, 0, iterable.length, callback) : callback();
-    }
+    return returnValue(callback, function (callback) {
+        if (Array.isArray(iterable)) {
+            return iterable.length ? callArrayIterator(iterable, iterator, 0, iterable.length, callback) : callback();
+        }
 
-    var keys = Object.keys(iterable);
-    keys.length ? callObjectIterator(iterable, iterator, 0, keys.length, keys, callback) : callback();
+        var keys = Object.keys(iterable);
+        keys.length ? callObjectIterator(iterable, iterator, 0, keys.length, keys, callback) : callback();
+    });
 };

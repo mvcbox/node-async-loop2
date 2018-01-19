@@ -1,5 +1,7 @@
 'use strict';
 
+var returnValue = require('./return-value');
+
 /**
  * @param {Function} condition
  * @param {Function} iterator
@@ -23,9 +25,7 @@ function callIterator(condition, iterator, callback) {
  * @param {Function} callback
  */
 module.exports = function (condition, iterator, callback) {
-    if (!condition()) {
-        return callback();
-    }
-
-    callIterator(condition, iterator, callback);
+    return returnValue(callback, function (callback) {
+        condition() ? callIterator(condition, iterator, callback) : callback();
+    });
 };
