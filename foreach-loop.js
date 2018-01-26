@@ -1,6 +1,7 @@
 'use strict';
 
 var returnValue = require('./return-value');
+var queue = require('./queue');
 
 /**
  * @param {Object} iterable
@@ -11,15 +12,12 @@ var returnValue = require('./return-value');
  * @param {Function} callback
  */
 function callObjectIterator(iterable, iterator, index, to, keys, callback) {
-    var key = keys[index];
+    queue.push(function (next) {
+        var key = keys[index];
 
-    iterator(key, iterable[key], function (breakFlag) {
-        if (breakFlag || ++index >= to) {
-            return callback();
-        }
-
-        process.nextTick(function () {
-            callObjectIterator(iterable, iterator, index, to, keys, callback);
+        iterator(key, iterable[key], function (breakFlag) {
+            breakFlag || ++index >= to ? callback() : callObjectIterator(iterable, iterator, index, to, keys, callback);
+            next();
         });
     });
 }
@@ -32,13 +30,10 @@ function callObjectIterator(iterable, iterator, index, to, keys, callback) {
  * @param {Function} callback
  */
 function callArrayIterator(iterable, iterator, index, to, callback) {
-    iterator(index, iterable[index], function (breakFlag) {
-        if (breakFlag || ++index >= to) {
-            return callback();
-        }
-
-        process.nextTick(function () {
-            callArrayIterator(iterable, iterator, index, to, callback);
+    queue.push(function (next) {
+        iterator(index, iterable[index], function (breakFlag) {
+            breakFlag || ++index >= to ? callback() : callArrayIterator(iterable, iterator, index, to, callback);
+            next();
         });
     });
 }

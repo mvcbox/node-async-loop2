@@ -1,6 +1,7 @@
 'use strict';
 
 var returnValue = require('./return-value');
+var queue = require('./queue');
 
 /**
  * @param {Number} index
@@ -9,13 +10,10 @@ var returnValue = require('./return-value');
  * @param {Function} callback
  */
 function callIterator(index, to, iterator, callback) {
-    iterator(index, function (breakFlag) {
-        if (breakFlag || ++index >= to) {
-            return callback();
-        }
-
-        process.nextTick(function () {
-            callIterator(index, to, iterator, callback);
+    queue.push(function (next) {
+        iterator(index, function (breakFlag) {
+            breakFlag || ++index >= to ? callback() : callIterator(index, to, iterator, callback);
+            next();
         });
     });
 }
