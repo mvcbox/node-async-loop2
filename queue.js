@@ -1,3 +1,5 @@
 'use strict';
 
-module.exports = require('./queue-factory')();
+var Queue = require('plain-queue');
+
+module.exports = new Queue;
