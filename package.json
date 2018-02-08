@@ -1,6 +1,6 @@
 {
   "name": "async-loop2",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Node acync loop",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,6 @@
   "homepage": "https://github.com/mvcbox/node-async-loop2#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "plain-queue": "^1.0.0"
+    "plain-queue": "^1.1.1"
   }
 }

@@ -1,29 +1,33 @@
 'use strict';
 
 var returnValue = require('../return-value');
-var queue = require('../queue');
 
 /**
- * @param {Function} condition
  * @param {Function} iterator
+ * @param {Object} queue
  * @param {Function} callback
  */
-function callIterator(condition, iterator, callback) {
+function callIterator(iterator, queue, callback) {
     queue.push(function (next) {
         iterator(function (breakFlag) {
-            breakFlag || !condition() ? callback() : callIterator(condition, iterator, callback);
+            breakFlag ? callback() : callIterator(iterator, queue, callback);
             next();
         });
     });
 }
 
 /**
- * @param {Function} condition
- * @param {Function} iterator
- * @param {Function} callback
+ * @param {Option} options
+ * @return {Function}
  */
-module.exports = function (condition, iterator, callback) {
-    return returnValue(callback, function (callback) {
-        condition() ? callIterator(condition, iterator, callback) : callback();
-    });
+module.exports = function (options) {
+    /**
+     * @param {Function} iterator
+     * @param {Function} callback
+     */
+    return function (iterator, callback) {
+        return returnValue(callback, function (callback) {
+            callIterator(iterator, options.queue, callback);
+        });
+    };
 };
